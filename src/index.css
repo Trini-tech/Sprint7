@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-height: 100vh;
+  font-family: 'helvetica';
+  background-color: black;
+  color: white;
+}
+
+.nav li {
+  padding: 0.5rem;
+  height: 100%;
+}
+
+.nav li a {
+  height: 100%;
+}
+
+.container {
+  width: 100%;
+  padding: 30px 120px;
+  display: flex;
+  justify-content: center;
+}
