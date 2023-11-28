@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react';
 import arrayURL from '../assets/images/imagesURL.json';
-interface Starship {
-  name: string;
-  model: string;
-  cost: string;
-  speed: string;
-  manufacturer: string;
-  length: string;
-  crew: string;
-}
+import { Starship } from '../interfaces/interfaces';
 
-function fetchStarships(): Promise<Starship[]> {
-  const url = 'https://swapi.dev/api/starships/?page=1';
+function fetchStarships(page: number): Promise<Starship[]> {
+  const url = `https://swapi.dev/api/starships/?page=${page}`;
 
   return fetch(url)
     .then((response) => response.json())
@@ -35,14 +27,35 @@ function fetchStarships(): Promise<Starship[]> {
 export default function Starships() {
   const [starshipsArray, setStarshipsArray] = useState<Starship[]>([]);
   const [selectedStarshipIndex, setSelectedStarshipIndex] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleMoreStarships = async () => {
+    setLoading(true);
+    console.log(currentPage);
+    try {
+      const newStarships = await fetchStarships(currentPage + 1);
+      setStarshipsArray((prevStarships) => [...prevStarships, ...newStarships]);
+      setCurrentPage((prevPage) => prevPage + 1);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching starships:', error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const starships = await fetchStarships();
+        setLoading(true);
+        let page = 1;
+        const starships: Starship[] = await fetchStarships(page);
+
         setStarshipsArray(starships);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching starships:', error);
+        setLoading(false);
       }
     }
 
@@ -84,6 +97,17 @@ export default function Starships() {
             </li>
           );
         })}
+        <div>
+          <div className="flex justify-center p-3">{loading && <div className="loading loading-spinner pb-3"></div>}</div>
+
+          {currentPage < 4 && (
+            <div className="flex justify-center">
+              <button disabled={loading} className="btn" onClick={handleMoreStarships}>
+                View more
+              </button>
+            </div>
+          )}
+        </div>
       </ul>
     </main>
   );
