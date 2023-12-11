@@ -32,7 +32,6 @@ export default function Starships() {
 
   const handleMoreStarships = async () => {
     setLoading(true);
-    console.log(currentPage);
     try {
       const newStarships = await fetchStarships(currentPage + 1);
       setStarshipsArray((prevStarships) => [...prevStarships, ...newStarships]);
