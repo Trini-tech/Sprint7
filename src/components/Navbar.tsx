@@ -16,9 +16,6 @@ interface CustomLinkProps {
 export default function Navbar(): JSX.Element {
   const { user, logout } = AuthData();
 
-  console.log('está autenticado?', user.isAuthenticated);
-  console.log('email', user.email);
-
   return (
     <nav className="nav">
       <div className="grid grid-cols-3">

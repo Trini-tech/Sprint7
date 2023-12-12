@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface User {
   email: string;
@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('respuesta ok');
         const result = await response.json();
         setUser({ email: result.user.email, isAuthenticated: true });
-        console.log(user);
         return 'success';
       } else {
         console.log('error 1');
@@ -52,6 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser({ ...user, isAuthenticated: false });
   };
+
+  useEffect(() => {
+    console.log('user state updated:', user);
+  }, [user]);
 
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 }
